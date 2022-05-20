@@ -49,6 +49,24 @@ async function run() {
       res.send(Product)
     })
 
+    // ............ Get All Orders ...........................
+    app.get('/Orders', async (req, res) => {
+      const cursor = OrdersColloction.find({});
+      const Orders = await cursor.toArray();
+      res.send(Orders)
+    })
+    // get order single order....
+
+    app.get('/Order/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const Order = await OrdersColloction.findOne(query);
+      res.send(Order)
+    })
+
+
+
+    // ............ Get All Orders ...........................
 
     //find  a single  order data//
     app.get("/myOrder/:email", async (req, res) => {
@@ -60,13 +78,14 @@ async function run() {
 
 
 
-    // ..................All Post Api.............................///
+    // .........................................................All Post Api............................................///
     // users post api
     app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await usersCollection.insertOne(user);
       res.json(result);
     });
+
 
 
     // app.post('/Product',async(req, res)=>{
@@ -76,13 +95,16 @@ async function run() {
       res.send(result);
     })
 
+
     // app.post('/Order',async(req, res)=>{
     app.post('/Orders', async (req, res) => {
       const order = req.body;
       const result = await OrdersColloction.insertOne(order);
       res.send(result);
     })
-    //  /....................All Delet Api..///////////////////////////
+
+    // /..........................................................All Delet Api........................../////
+
     //Manage  product  api  code//
     app.delete('/Product/:id', async (req, res) => {
       const id = req.params.id;
@@ -91,6 +113,7 @@ async function run() {
       res.json(result)
     })
     //Delete all order api  code//
+
 
 
     //Delete all order api  code//
@@ -102,6 +125,8 @@ async function run() {
     })
     //Delete all order api  code//
 
+
+
     //my order deletapi code //
     app.delete('/myOrder/:id', async (req, res) => {
       const id = req.params.id;
@@ -111,7 +136,44 @@ async function run() {
     })
     //my order deletapi code //
 
+    // ..................................................... alll Update Work.......................////
+    app.put("/Processing/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const updatedData = req.body.Status;
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          Status: updatedData,
+        },
+      };
+      const result = await OrdersColloction.updateOne(
+        query,
+        updateDoc,
+        options
+      );
+      res.json(result);
+    });
 
+    app.put("/Delivery/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+
+      const updatedData = req.body.Status;
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          Status: updatedData,
+        },
+      };
+      const result = await OrdersColloction.updateOne(
+        query,
+        updateDoc,
+        options
+      );
+      res.json(result);
+    });
+    // ..................................................... alll Update Work.......................////
 
     // // users GET API
     // app.get("/users", async (req, res) => {
