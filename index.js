@@ -5,22 +5,18 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-
-
-const ObjectId = require('mongodb').ObjectId
-
-
+const ObjectId = require("mongodb").ObjectId;
 
 //middle ware//
 app.use(cors());
 app.use(express.json());
 
-
-
-
 //NEW CONNECT to data base and node server code end//
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ruek4.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 //NEW CONNECT to data base and node server code end//
 
 async function run() {
@@ -34,37 +30,34 @@ async function run() {
     // ..................All Get Api...........................///
     // GET Find single data deatails Document Client site read code//
     //GEt  Find Multiple Documents Client site read code//
-    app.get('/Product', async (req, res) => {
+    app.get("/Product", async (req, res) => {
       const cursor = ProductColloction.find({});
       const Product = await cursor.toArray();
-      res.send(Product)
-    })
+      res.send(Product);
+    });
     //GEt  Find Multiple Documents Client site read code//
 
-
-    app.get('/Product/:id', async (req, res) => {
+    app.get("/Product/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const Product = await ProductColloction.findOne(query);
-      res.send(Product)
-    })
+      res.send(Product);
+    });
 
     // ............ Get All Orders ...........................
-    app.get('/Orders', async (req, res) => {
+    app.get("/Orders", async (req, res) => {
       const cursor = OrdersColloction.find({});
       const Orders = await cursor.toArray();
-      res.send(Orders)
-    })
+      res.send(Orders);
+    });
     // get order single order....
 
-    app.get('/Order/:id', async (req, res) => {
+    app.get("/Order/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const Order = await OrdersColloction.findOne(query);
-      res.send(Order)
-    })
-
-
+      res.send(Order);
+    });
 
     // ............ Get All Orders ...........................
 
@@ -76,8 +69,6 @@ async function run() {
       res.send(result);
     });
 
-
-
     // .........................................................All Post Api............................................///
     // users post api
     app.post("/users", async (req, res) => {
@@ -86,54 +77,47 @@ async function run() {
       res.json(result);
     });
 
-
-
     // app.post('/Product',async(req, res)=>{
-    app.post('/Product', async (req, res) => {
+    app.post("/Product", async (req, res) => {
       const Product = req.body;
       const result = await ProductColloction.insertOne(Product);
       res.send(result);
-    })
-
+    });
 
     // app.post('/Order',async(req, res)=>{
-    app.post('/Orders', async (req, res) => {
+    app.post("/Orders", async (req, res) => {
       const order = req.body;
       const result = await OrdersColloction.insertOne(order);
       res.send(result);
-    })
+    });
 
     // /..........................................................All Delet Api........................../////
 
     //Manage  product  api  code//
-    app.delete('/Product/:id', async (req, res) => {
+    app.delete("/Product/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const result = await ProductColloction.deleteOne(query)
-      res.json(result)
-    })
+      const result = await ProductColloction.deleteOne(query);
+      res.json(result);
+    });
     //Delete all order api  code//
 
-
-
     //Delete all order api  code//
-    app.delete('/Orders/:id', async (req, res) => {
+    app.delete("/Orders/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const result = await OrdersColloction.deleteOne(query)
-      res.json(result)
-    })
+      const result = await OrdersColloction.deleteOne(query);
+      res.json(result);
+    });
     //Delete all order api  code//
-
-
 
     //my order deletapi code //
-    app.delete('/myOrder/:id', async (req, res) => {
+    app.delete("/myOrder/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const result = await OrdersColloction.deleteOne(query)
-      res.json(result)
-    })
+      const result = await OrdersColloction.deleteOne(query);
+      res.json(result);
+    });
     //my order deletapi code //
 
     // ..................................................... alll Update Work.......................////
@@ -175,58 +159,57 @@ async function run() {
     });
     // ..................................................... alll Update Work.......................////
 
-    // // users GET API
-    // app.get("/users", async (req, res) => {
-    //   const cursor = usersCollection.find({});
-    //   const users = await cursor.toArray();
-    //   res.json(users);
-    // });
+    // users GET API
+    app.get("/users", async (req, res) => {
+      const cursor = usersCollection.find({});
+      const users = await cursor.toArray();
+      res.json(users);
+    });
 
-    // // put users
-    // app.put("/users", async (req, res) => {
-    //   const user = req.body;
-    //   const filter = { email: user.email };
-    //   const options = { upsert: true };
-    //   const updateDoc = { $set: user };
-    //   const result = await usersCollection.updateOne(
-    //     filter,
-    //     updateDoc,
-    //     options
-    //   );
-    //   res.json(result);
-    // });
+    // put users
+    app.put("/users", async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const options = { upsert: true };
+      const updateDoc = { $set: user };
+      const result = await usersCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.json(result);
+    });
 
-    // // put admin
-    // app.put("/users/admin", async (req, res) => {
-    //   const user = req.body;
-    //   console.log("put", user);
-    //   const filter = { email: user.email };
-    //   const updateDoc = { $set: { role: "admin" } };
-    //   const result = await usersCollection.updateOne(filter, updateDoc);
-    //   res.json(result);
-    // });
+    // put admin
+    app.put("/users/admin", async (req, res) => {
+      const user = req.body;
+      console.log("put", user);
+      const filter = { email: user.email };
+      const updateDoc = { $set: { role: "admin" } };
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.json(result);
+    });
 
-    // // get admin user
-    // app.get("/users/:email", async (req, res) => {
-    //   const email = req.params.email;
-    //   const query = { email: email };
-    //   const user = await usersCollection.findOne(query);
-    //   let isAdmin = false;
-    //   if (user?.role === "admin") {
-    //     isAdmin = true;
-    //   }
-    //   res.json({ admin: isAdmin });
-    // });
+    // get admin user
+    app.get("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      let isAdmin = false;
+      if (user?.role === "admin") {
+        isAdmin = true;
+      }
+      res.json({ admin: isAdmin });
+    });
   } finally {
     // await client.close();
   }
-
 }
 
 run().catch(console.dir);
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+app.get("/", (req, res) => {
+  res.send("Hello World!");
 });
 app.listen(port, () => {
-  console.log("Example", port)
+  console.log("Example", port);
 });
